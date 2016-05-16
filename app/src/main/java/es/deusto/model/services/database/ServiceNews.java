@@ -30,4 +30,19 @@ public class ServiceNews {
             this.noticias.insert(n);
         }
     }
+
+    public void deleteAllRSSForANew(Long id) {
+        List<Noticia> a = this.noticias.queryBuilder().where(NoticiaDao.Properties.Id.eq(id)).list();
+        this.deleteListOfNews(a);
+    }
+
+    private void deleteListOfNews(List<Noticia> a) {
+        for(Noticia n: a){
+            noticias.delete(n);
+        }
+    }
+
+    public void insertRSS(Noticia noticia) {
+        noticias.insert(noticia);
+    }
 }

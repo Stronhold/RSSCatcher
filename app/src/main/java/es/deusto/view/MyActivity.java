@@ -1,6 +1,7 @@
 package es.deusto.view;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -20,6 +21,9 @@ import android.widget.ListView;
 import com.elpoeta.menulateralslide.R;
 
 import es.deusto.model.services.database.Database;
+import es.deusto.model.services.rss.FeedTask;
+import es.deusto.model.services.rss.RssItem;
+import es.deusto.model.services.rss.RssReader;
 
 
 public class MyActivity extends Activity {
@@ -106,6 +110,17 @@ public class MyActivity extends Activity {
             // on first time display view for first nav item
             displayView(0);
         }
+
+        new FeedTask().execute("http://feeds.bbci.co.uk/news/rss.xml");
+  /*      try {
+            List<RssItem> RssItems = rssReader.getItems();
+            for(RssItem r: RssItems){
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+
     }
 
     /**
