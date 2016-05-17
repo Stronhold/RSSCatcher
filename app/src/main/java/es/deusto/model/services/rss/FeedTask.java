@@ -16,7 +16,7 @@ public class FeedTask extends AsyncTask<String, List<Noticia>, List<Noticia>>{
 
     @Override
     protected List<Noticia> doInBackground(String... params) {
-        List<Noticia> noticias = new ArrayList<>();
+        List<Noticia> noticias = new ArrayList<Noticia>();
         try {
             RssReader rssReader = new RssReader(params[0]);
             for (RssItem item : rssReader.getItems())

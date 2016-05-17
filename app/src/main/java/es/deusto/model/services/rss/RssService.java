@@ -45,7 +45,7 @@ public class RssService extends Service implements INotifyResult{
         Database db = Database.Instance(this);
         List<RSS> listaRss = db.getsRSS().getRSS();
         // schedule task
-        List<Noticia> listaNoticias = new ArrayList<>();
+        List<Noticia> listaNoticias = new ArrayList<Noticia>();
 
         for(RSS r:listaRss) {
             FeedTask myFeedTask = new FeedTask();
