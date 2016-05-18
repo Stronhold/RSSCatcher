@@ -29,8 +29,8 @@ public class Seccion4 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.seccion4, container, false);
+
 
         img = (ImageView) rootView.findViewById(R.id.imagePlaceholder);
         img.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +39,6 @@ public class Seccion4 extends Fragment {
                 selectImage();
             }
         });
-
         return rootView;
 
 
