@@ -1,4 +1,4 @@
-package es.deusto.view;
+package es.deusto.view.Fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -8,26 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.elpoeta.menulateralslide.R;
 
-/**
- * Created by user on 26/08/2014.
- */
-public class Seccion4 extends Fragment {
+import es.deusto.model.services.database.dao.RSS;
 
+/**
+ * Created by Sergio on 18/05/2016.
+ */
+public class FragmentAddRss extends Fragment {
     EditText eTextName, eTextUrl;
     Button bSave;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.seccion4, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_add_rss, container, false);
 
         return rootView;
     }
-
 
     @Override
     public void onViewCreated(View rootView, Bundle savedInstanceState) {

@@ -1,5 +1,6 @@
-package es.deusto.model.services.rss;
+package es.deusto.view.Settings;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -15,20 +16,26 @@ import com.elpoeta.menulateralslide.R;
 
 import java.util.Calendar;
 
+import es.deusto.model.services.rss.RssService;
+
 /**
  * Created by andre on 17/05/2016.
  */
-public class mySettingsFragments extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class MySettingsFragments extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
     PendingIntent pendingIntent;
 
+    private Activity activity;
+
+    @Override
+    public void onAttach(Activity a){
+        super.onAttach(a);
+        this.activity = a;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
-
-        EditTextPreference pref = (EditTextPreference) findPreference("txtLocDefault");
-        pref.setSummary(pref.getText());
+        PreferenceManager.getDefaultSharedPreferences(activity).registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -52,16 +59,16 @@ public class mySettingsFragments extends PreferenceFragment implements SharedPre
         calendar.add(Calendar.SECOND, 60); // first time
         long frequency= 30 * 60 * 1000; // in ms
 
-        Intent intent = new Intent(this.getActivity(), RssService.class);
-        pendingIntent = PendingIntent.getService(this.getActivity(), 123456, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this.activity, RssService.class);
+        pendingIntent = PendingIntent.getService(this.activity, 123456, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
     }
 
     private void finishBackground(){
         Log.i("FINALIZAMOS SERVICIO", "AHORA");
-        AlarmManager alarmManagerstop = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
+        AlarmManager alarmManagerstop = (AlarmManager) activity.getSystemService(activity.ALARM_SERVICE);
         alarmManagerstop.cancel(pendingIntent);
-        getActivity().stopService(new Intent(getActivity(), RssService.class));
+        activity.stopService(new Intent(activity, RssService.class));
     }
 }

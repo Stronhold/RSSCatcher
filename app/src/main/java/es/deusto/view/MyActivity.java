@@ -24,6 +24,7 @@ import es.deusto.model.services.database.Database;
 import es.deusto.model.services.rss.FeedTask;
 import es.deusto.model.services.rss.RssItem;
 import es.deusto.model.services.rss.RssReader;
+import es.deusto.view.Fragments.FragmentAddRss;
 
 
 public class MyActivity extends Activity {
@@ -72,6 +73,8 @@ public class MyActivity extends Activity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "Estrenos"));
         // Contacto
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+        //Add thing :D
+        navDrawerItems.add(new NavDrawerItem("Add RSS", navMenuIcons.getResourceId(4, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -151,6 +154,15 @@ public class MyActivity extends Activity {
         // Handle action bar actions click
         switch (item.getItemId()) {
             case R.id.action_settings:
+                Fragment fragment = new MySettings();
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame_container, fragment).commit();
+
+                    setTitle(R.string.title);
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -163,8 +175,8 @@ public class MyActivity extends Activity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // if nav drawer is opened, hide the action items
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -187,7 +199,8 @@ public class MyActivity extends Activity {
             case 3:
                 fragment = new Seccion4();
                 break;
-
+            case 4:
+                fragment = new Seccion4();
             default:
                 break;
         }
@@ -200,8 +213,9 @@ public class MyActivity extends Activity {
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
-            setTitle(navMenuTitles[position]);
+            setTitle("");
             mDrawerLayout.closeDrawer(mDrawerList);
+            Log.e("asd", "asd");
         } else {
             // error in creating fragment
             Log.e("Ramiro", "MainActivity - Error cuando se creo el fragment");

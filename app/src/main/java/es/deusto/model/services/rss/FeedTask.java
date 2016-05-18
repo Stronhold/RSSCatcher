@@ -35,7 +35,8 @@ public class FeedTask extends AsyncTask<String, List<Noticia>, List<Noticia>>{
     @Override
     protected void onPostExecute(List<Noticia> n) {
         super.onPostExecute(n);
-        delegate.processFinish(n);
+        if(delegate != null)
+            delegate.processFinish(n);
       //  adapter.notifyDataSetChanged();
       //  mList.setAdapter(adapter);
     }

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.elpoeta.menulateralslide.R;
 
-import es.deusto.model.services.rss.mySettingsFragments;
+import es.deusto.view.Settings.MySettingsFragments;
 
 
 /**
@@ -21,7 +21,7 @@ public class MySettings extends Fragment {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.mysettings, container, false);
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new mySettingsFragments())
+                .replace(android.R.id.content, new MySettingsFragments())
                 .commit();
         return rootView;
     }
