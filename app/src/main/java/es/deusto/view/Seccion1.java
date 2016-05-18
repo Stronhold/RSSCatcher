@@ -5,14 +5,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.elpoeta.menulateralslide.R;
+
+import java.util.List;
 
 /**
  * Created by user on 26/08/2014.
  */
 public class Seccion1 extends Fragment {
 
+    ListView listaNews;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -20,5 +26,10 @@ public class Seccion1 extends Fragment {
         View rootView = inflater.inflate(R.layout.seccion1, container, false);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View rootView, Bundle savedInstanceState) {
+        listaNews = (ListView) rootView.findViewById(R.id.listaNews);
     }
 }
