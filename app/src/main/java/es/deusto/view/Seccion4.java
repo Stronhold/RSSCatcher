@@ -22,9 +22,7 @@ public class Seccion4 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.seccion4, container, false);
-
         return rootView;
     }
 

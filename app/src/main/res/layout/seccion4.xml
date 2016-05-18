@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
     <ImageView
         android:src="@drawable/placeholder"
         android:adjustViewBounds="true"
@@ -24,13 +26,13 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/rssName"
         android:layout_below="@id/imagePlaceholder"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
         android:layout_marginRight="10dp"
-        android:maxLines="1"
-        android:layout_marginTop="6dp" />
+        android:maxLines="1" />
     <TextView
         android:text="Url:"
         android:id="@+id/tViewRssUlr"
-        android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rssName"
@@ -39,13 +41,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tEditUrl"
-        android:layout_marginRight="10dp"
-        android:maxLines="1"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/tViewRssUlr"
         android:layout_below="@id/tEditNameRss" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ASD"
+        android:text="Add RSS"
+        android:layout_alignParentBottom="true"
         android:id="@+id/buttonSave"/>
-</LinearLayout>
+</RelativeLayout>
