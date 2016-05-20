@@ -21,6 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name="es.deusto.model.services.rss.RssService">
+            <intent-filter android:label="@string/notifications" >
+                <action android:name="MY_SERVICE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
