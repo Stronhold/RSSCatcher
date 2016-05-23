@@ -2,6 +2,7 @@ package es.deusto.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.elpoeta.menulateralslide.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -49,14 +51,22 @@ public class NavDrawerListAdapter extends BaseAdapter {
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
         TextView txtCount = (TextView) convertView.findViewById(R.id.counter);
-         
-        imgIcon.setImageResource(navDrawerItems.get(position).getIcon());        
-        txtTitle.setText(navDrawerItems.get(position).getTitle());
+        NavDrawerItem drawerItem = navDrawerItems.get(position);
+        if(drawerItem.getIcon() != null && drawerItem.getIcon() != "") {
+            String uri = drawerItem.getIcon();
+            String decodedUri = Uri.decode(uri);
+            ImageLoader.getInstance().displayImage(decodedUri, imgIcon);
+        }
+        else{
+            String imageUri = "drawable://" + R.drawable.rss_add;
+            ImageLoader.getInstance().displayImage(imageUri, imgIcon);
+        }
+        txtTitle.setText(drawerItem.getTitle());
         
         // displaying count
         // check whether it set visible or not
-        if(navDrawerItems.get(position).getCounterVisibility()){
-        	txtCount.setText(navDrawerItems.get(position).getCount());
+        if(drawerItem.getCounterVisibility()){
+        	txtCount.setText(drawerItem.getCount());
         }else{
         	// hide the counter view
         	txtCount.setVisibility(View.GONE);

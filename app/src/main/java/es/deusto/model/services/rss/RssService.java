@@ -15,7 +15,6 @@ import com.elpoeta.menulateralslide.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.ExecutionException;
 
 import es.deusto.model.services.database.Database;
@@ -50,7 +49,7 @@ public class RssService extends Service{
         // schedule task
         List<Noticia> listaNoticias = new ArrayList<Noticia>();
 
-        /*for(RSS r:listaRss) {
+        for(RSS r:listaRss) {
             FeedTask myFeedTask = new FeedTask();
             try {
                 myFeedTask.execute(r.getUrl()).get();
@@ -60,7 +59,7 @@ public class RssService extends Service{
                 e.printStackTrace();
             }
             reloadDB(r.getId());
-        }*/
+        }
 
         if(count >= 0){
             String sendMsg = "Tienes " + count + " nuevas noticias";
@@ -125,7 +124,7 @@ public class RssService extends Service{
         }
         Database.Instance(this).getNews().deleteAllRSSForANew(id);
         for(int i = 0; i < size; i++){
-            Database.Instance(this).getNews().insertRSS(items.get(i));
+            Database.Instance(this).getNews().insertNews(items.get(i));
         }
     }
 }

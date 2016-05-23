@@ -28,4 +28,12 @@ public class ServiceRSS {
             this.rss.insert(r);
         }
     }
+
+    public boolean insertRSS(RSS r) {
+        if(getRSS().size() >= 3){
+            return false;
+        }
+        rss.insert(r);
+        return true;
+    }
 }

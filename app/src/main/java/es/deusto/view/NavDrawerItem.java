@@ -3,19 +3,20 @@ package es.deusto.view;
 public class NavDrawerItem {
 	
 	private String title;
-	private int icon;
+	private String icon;
 	private String count = "0";
 	// boolean to set visiblity of the counter
 	private boolean isCounterVisible = false;
 	
 	public NavDrawerItem(){}
 
-	public NavDrawerItem(String title, int icon){
+	public NavDrawerItem(String title, String path){
 		this.title = title;
-		this.icon = icon;
+		this.icon = path;
 	}
+
 	
-	public NavDrawerItem(String title, int icon, boolean isCounterVisible, String count){
+	public NavDrawerItem(String title, String icon, boolean isCounterVisible, String count){
 		this.title = title;
 		this.icon = icon;
 		this.isCounterVisible = isCounterVisible;
@@ -26,7 +27,7 @@ public class NavDrawerItem {
 		return this.title;
 	}
 	
-	public int getIcon(){
+	public String getIcon(){
 		return this.icon;
 	}
 	
@@ -42,7 +43,7 @@ public class NavDrawerItem {
 		this.title = title;
 	}
 	
-	public void setIcon(int icon){
+	public void setIcon(String icon){
 		this.icon = icon;
 	}
 	

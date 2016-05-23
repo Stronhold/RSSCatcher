@@ -1,4 +1,4 @@
-package es.deusto.view;
+package es.deusto.view.Fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -14,16 +14,20 @@ import com.elpoeta.menulateralslide.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.Noticia;
+import es.deusto.model.services.database.dao.RSS;
 import es.deusto.view.Fragments.Adapter.ListAdapterWithImage;
 
 /**
  * Created by user on 26/08/2014.
  */
-public class Seccion1 extends Fragment {
+public class NewsFragment extends Fragment {
 
     ListView listaNews;
     ListAdapterWithImage adapter;
+    private List<Noticia> noticias;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,9 +40,19 @@ public class Seccion1 extends Fragment {
     @Override
     public void onViewCreated(View rootView, Bundle savedInstanceState) {
         listaNews = (ListView) rootView.findViewById(R.id.listaNews);
-        List<Noticia> algo = new ArrayList<Noticia>();
-        algo.add(new Noticia((long) 0, "","","",""));
-        adapter = new ListAdapterWithImage(this.getActivity(), algo);
+        if(noticias == null)
+            noticias = new ArrayList<Noticia>();
+        adapter = new ListAdapterWithImage(this.getActivity(), noticias);
         listaNews.setAdapter(adapter);
+    }
+
+    public void setInfoForNews(int news){
+        RSS rss = Database.Instance(this.getActivity()).getsRSS().getRSS().get(news);
+        if(Database.Instance(this.getActivity()).getNews().getNews(rss).size() == 0){
+            Database.Instance(this.getActivity()).getNews().insertNews(new Noticia(rss.getId(), "hola" + news, "guapo", "", ""));
+        }
+        noticias = Database.Instance(this.getActivity()).getNews().getNews(rss);
+        if(adapter != null)
+            adapter.notifyDataSetChanged();
     }
 }

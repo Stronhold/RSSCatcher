@@ -43,12 +43,13 @@ public class ListAdapterWithImage extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = inflater.inflate (R.layout.custom_list, parent, false);
+        Noticia n = data.get(position);
         ViewHolder holder = new ViewHolder();
         holder.icon = (ImageView) convertView.findViewById(R.id.imageNewsList);
         holder.name = (TextView) convertView.findViewById(R.id.textView_Name);
         holder.desc = (TextView) convertView.findViewById(R.id.textView_Description);
-        holder.name.setText("hola");
-        holder.desc.setText("me pica el mojooooon");
+        holder.name.setText(n.getTitulo());
+        holder.desc.setText(n.getDescripcion());
         return convertView;
     }
 

@@ -17,15 +17,15 @@ public class ServiceNews {
         this.noticias = noticiaDao;
     }
 
-    public List<Noticia> getRSS(){
-        return noticias.queryBuilder().list();
+    public List<Noticia> getNews(RSS rss){
+        return this.noticias.queryBuilder().where(NoticiaDao.Properties.Id.eq(rss.getId())).list();
     }
 
     public void deleteAllRSS(){
         noticias.deleteAll();
     }
 
-    public void insertRSSs(List<Noticia> news){
+    public void insertMultipleNews(List<Noticia> news){
         for (Noticia n: news ) {
             this.noticias.insert(n);
         }
@@ -42,7 +42,7 @@ public class ServiceNews {
         }
     }
 
-    public void insertRSS(Noticia noticia) {
+    public void insertNews(Noticia noticia) {
         noticias.insert(noticia);
     }
 }
