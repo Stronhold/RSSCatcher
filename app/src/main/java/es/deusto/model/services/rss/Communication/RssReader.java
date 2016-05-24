@@ -1,9 +1,12 @@
-package es.deusto.model.services.rss;
+package es.deusto.model.services.rss.Communication;
 
 import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import es.deusto.model.services.rss.handler.RssHandler;
+import es.deusto.model.services.rss.handler.items.RssItem;
 
 /**
  * Created by Sergio on 13/05/2016.

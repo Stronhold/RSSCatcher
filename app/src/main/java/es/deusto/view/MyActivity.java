@@ -8,7 +8,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -26,9 +25,10 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.RSS;
-import es.deusto.model.services.rss.FeedTask;
 import es.deusto.view.Fragments.NewsFragment;
 import es.deusto.view.Fragments.RSSAddFragment;
+import es.deusto.view.lateralmenu.NavDrawerItem;
+import es.deusto.view.lateralmenu.NavDrawerListAdapter;
 
 
 public class MyActivity extends Activity {
@@ -105,7 +105,7 @@ public class MyActivity extends Activity {
             displayView(0);
         }
 
-        new FeedTask().execute("http://feeds.bbci.co.uk/news/rss.xml");
+        //new FeedTask().execute("http://feeds.bbci.co.uk/news/rss.xml");
   /*      try {
             List<RssItem> RssItems = rssReader.getItems();
             for(RssItem r: RssItems){

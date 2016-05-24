@@ -1,4 +1,4 @@
-package es.deusto.view;
+package es.deusto.view.lateralmenu;
 
 import android.app.Activity;
 import android.content.Context;

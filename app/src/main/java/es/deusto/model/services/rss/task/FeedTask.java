@@ -1,4 +1,4 @@
-package es.deusto.model.services.rss;
+package es.deusto.model.services.rss.task;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.deusto.model.services.database.dao.Noticia;
+import es.deusto.model.services.rss.INotifyResult;
+import es.deusto.model.services.rss.handler.items.RssItem;
+import es.deusto.model.services.rss.Communication.RssReader;
 
 /**
  * Created by Sergio on 16/05/2016.
@@ -40,7 +43,5 @@ public class FeedTask extends AsyncTask<String, List<Noticia>, List<Noticia>>{
         super.onPostExecute(n);
         if(delegate != null)
             delegate.processFinish(n);
-      //  adapter.notifyDataSetChanged();
-      //  mList.setAdapter(adapter);
     }
 }

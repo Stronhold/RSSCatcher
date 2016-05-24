@@ -1,4 +1,4 @@
-package es.deusto.view;
+package es.deusto.view.lateralmenu;
 
 public class NavDrawerItem {
 	

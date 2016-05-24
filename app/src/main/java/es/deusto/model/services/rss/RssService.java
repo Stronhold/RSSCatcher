@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.Noticia;
 import es.deusto.model.services.database.dao.RSS;
+import es.deusto.model.services.rss.task.FeedTask;
 
 /**
  * Created by Sergio on 16/05/2016.

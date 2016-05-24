@@ -1,4 +1,4 @@
-package es.deusto.model.services.rss;
+package es.deusto.model.services.rss.handler;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -6,6 +6,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import es.deusto.model.services.rss.handler.items.RssItem;
 
 /**
  * Created by Sergio on 13/05/2016.

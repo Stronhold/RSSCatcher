@@ -1,4 +1,4 @@
-package es.deusto.model.services.rss;
+package es.deusto.model.services.rss.handler.items;
 
 /**
  * Created by Sergio on 13/05/2016.
