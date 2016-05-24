@@ -57,7 +57,7 @@ public class MySettingsFragments extends PreferenceFragment implements SharedPre
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.SECOND, 1800); // first time
-        long frequency= 30 * 60 * 1000; // in ms
+        long frequency= 30 * 1000; // in ms
 
         Intent intent = new Intent(this.activity, RssService.class);
         pendingIntent = PendingIntent.getService(this.activity, 1205, intent, 0);

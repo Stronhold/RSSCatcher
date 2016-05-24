@@ -20,9 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.elpoeta.menulateralslide.R;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -49,11 +47,6 @@ public class MyActivity extends Activity {
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,17 +65,7 @@ public class MyActivity extends Activity {
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
         db = Database.Instance(this);
         navDrawerItems = new ArrayList<NavDrawerItem>();
-        // agregar un nuevo item al menu deslizante
-        // Favoritos
-        //navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        // Pedidos
-        //navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Catologo
-        // navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1), true, "Estrenos"));
-        // Contacto
-        // navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        //Add thing :D
-        // navDrawerItems.add(new NavDrawerItem("Add RSS", navMenuIcons.getResourceId(4, -1)));
+
         LoadItems();
         // Recycle the typed array
         navMenuIcons.recycle();

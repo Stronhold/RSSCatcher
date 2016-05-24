@@ -1,10 +1,16 @@
 package es.deusto.view.Fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +21,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.elpoeta.menulateralslide.R;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.RSS;
@@ -31,6 +45,7 @@ public class RSSAddFragment extends Fragment {
     Button bSave;
     ImageView img;
     private String path;
+    File f;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,18 +86,18 @@ public class RSSAddFragment extends Fragment {
                 RSS rss = new RSS();
                 rss.setImageUri(path);
                 rss.setName(eTextName.getText().toString());
-                rss.setUrl(eTextUrl.getText().toString());
+                rss.setUrl("http://feeds.bbci.co.uk/news/rss.xml");
+                //rss.setUrl(eTextUrl.getText().toString());
                 boolean added = Database.Instance(getActivity()).getsRSS().insertRSS(rss);
-                if(!added){
+                if (!added) {
                     Toast.makeText(getActivity(), "There are already three RSS's added",
                             Toast.LENGTH_LONG).show();
 
-                }
-                else{
+                } else {
                     Toast.makeText(getActivity(), "Added RSS",
                             Toast.LENGTH_LONG).show();
-                    ((MyActivity)getActivity()).LoadItems();
-                    ((MyActivity)getActivity()).notifyAdapter();
+                    ((MyActivity) getActivity()).LoadItems();
+                    ((MyActivity) getActivity()).notifyAdapter();
                 }
                 Log.d("Button", "click");
             }
@@ -93,15 +108,86 @@ public class RSSAddFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("ENTRO", "AQUI");
         if (requestCode == SELECT_FILE) {
             if (null != data) {
                 Uri selectedImage = data.getData();
-                path = selectedImage.getPath();
                 ImageView imgView = (ImageView) getActivity().findViewById(R.id.imagePlaceholder);
                 imgView.setImageURI(selectedImage);
                 imgView.setTag(selectedImage);
+                Bitmap img;
+                try {
+                    img = getThumbnail(selectedImage);
+                    img = Bitmap.createScaledBitmap(img, 48, 48, true);
+
+                    File f = createImageFile();
+                    Intent mediaScanIntent = new Intent (Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+
+                    Uri url = Uri.fromFile(f);
+                    mediaScanIntent.setData(url);
+                    getActivity().sendBroadcast(mediaScanIntent);
+
+                    path = f.getAbsolutePath();
+
+                    FileOutputStream out = null;
+                    try {
+                        out = new FileOutputStream(f);
+                        img.compress(Bitmap.CompressFormat.PNG, 100, out);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if (out != null) {
+                                out.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
+    }
+
+    public Bitmap getThumbnail(Uri uri) throws FileNotFoundException, IOException {
+        InputStream input = getActivity().getContentResolver().openInputStream(uri);
+
+        BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+        onlyBoundsOptions.inJustDecodeBounds = true;
+        onlyBoundsOptions.inDither=true;//optional
+        onlyBoundsOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
+        BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
+        input.close();
+        if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1))
+            return null;
+
+        int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
+
+        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+        bitmapOptions.inDither = true;//optional
+        bitmapOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
+        input = getActivity().getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+        input.close();
+        return bitmap;
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".png",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        path = "file:" + image.getAbsolutePath();
+        return image;
     }
 }
