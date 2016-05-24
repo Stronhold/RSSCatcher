@@ -14,6 +14,9 @@ import es.deusto.model.services.database.dao.Noticia;
 public class FeedTask extends AsyncTask<String, List<Noticia>, List<Noticia>>{
     public INotifyResult delegate = null;
 
+    public FeedTask(INotifyResult result){
+        this.delegate = result;
+    }
     @Override
     protected List<Noticia> doInBackground(String... params) {
         List<Noticia> noticias = new ArrayList<Noticia>();

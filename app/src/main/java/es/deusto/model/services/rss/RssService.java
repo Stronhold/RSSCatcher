@@ -24,7 +24,7 @@ import es.deusto.model.services.database.dao.RSS;
 /**
  * Created by Sergio on 16/05/2016.
  */
-public class RssService extends Service{
+public class RssService extends Service implements INotifyResult{
     // constant
     public static final long NOTIFY_INTERVAL = 10 * 1000; // 10 seconds
 
@@ -50,7 +50,7 @@ public class RssService extends Service{
         List<Noticia> listaNoticias = new ArrayList<Noticia>();
 
         for(RSS r:listaRss) {
-            FeedTask myFeedTask = new FeedTask();
+            FeedTask myFeedTask = new FeedTask(this);
             try {
                 myFeedTask.execute(r.getUrl()).get();
             } catch (InterruptedException e) {
@@ -104,7 +104,7 @@ public class RssService extends Service{
         List<Noticia> listaNoticias = new ArrayList<Noticia>();
 
         for(RSS r:listaRss) {
-            FeedTask myFeedTask = new FeedTask();
+            FeedTask myFeedTask = new FeedTask(this);
             try {
                 myFeedTask.execute(r.getUrl()).get();
             } catch (InterruptedException e) {
@@ -126,5 +126,10 @@ public class RssService extends Service{
         for(int i = 0; i < size; i++){
             Database.Instance(this).getNews().insertNews(items.get(i));
         }
+    }
+
+    @Override
+    public void processFinish(List<Noticia> items) {
+        this.items = items;
     }
 }
