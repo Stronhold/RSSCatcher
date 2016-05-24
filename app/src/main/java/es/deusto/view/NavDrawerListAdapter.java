@@ -55,7 +55,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
         if(drawerItem.getIcon() != null && drawerItem.getIcon() != "") {
             String uri = drawerItem.getIcon();
             String decodedUri = Uri.decode(uri);
-            ImageLoader.getInstance().displayImage(decodedUri, imgIcon);
+            ImageLoader.getInstance().displayImage("file:///" + decodedUri, imgIcon);
         }
         else{
             String imageUri = "drawable://" + R.drawable.rss_add;
