@@ -16,9 +16,14 @@ import es.deusto.model.services.rss.Communication.RssReader;
  */
 public class FeedTask extends AsyncTask<String, List<Noticia>, List<Noticia>>{
     public INotifyResult delegate = null;
+    private long id;
 
     public FeedTask(INotifyResult result){
         this.delegate = result;
+    }
+
+    public void setID(long id){
+        this.id = id;
     }
     @Override
     protected List<Noticia> doInBackground(String... params) {
@@ -28,7 +33,7 @@ public class FeedTask extends AsyncTask<String, List<Noticia>, List<Noticia>>{
             for (RssItem item : rssReader.getItems())
             {
                 //String titulo, String descripcion, String image, String link
-                Noticia n = new Noticia(1L, item.getTitle(),item.getDescription(), item.getImageUrl(), item.getLink());
+                Noticia n = new Noticia(1L,this.id, item.getTitle(),item.getDescription(), item.getImageUrl(), item.getLink());
                 noticias.add(n);
             }
               //  adapter.add(item.getTitle());
@@ -42,6 +47,6 @@ public class FeedTask extends AsyncTask<String, List<Noticia>, List<Noticia>>{
     protected void onPostExecute(List<Noticia> n) {
         super.onPostExecute(n);
         if(delegate != null)
-            delegate.processFinish(n);
+            delegate.processFinish(n, this.id);
     }
 }

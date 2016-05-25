@@ -1,6 +1,5 @@
 package es.deusto.model.services.database.dao;
 
-import java.util.List;
 import es.deusto.model.services.database.dao.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -11,6 +10,7 @@ import de.greenrobot.dao.DaoException;
 public class Noticia {
 
     private Long id;
+    private Long noticiaID;
     private String titulo;
     private String descripcion;
     private String image;
@@ -22,7 +22,9 @@ public class Noticia {
     /** Used for active entity operations. */
     private transient NoticiaDao myDao;
 
-    private List<RSS> rSSList;
+    private RSS rSS;
+    private Long rSS__resolvedKey;
+
 
     public Noticia() {
     }
@@ -31,8 +33,9 @@ public class Noticia {
         this.id = id;
     }
 
-    public Noticia(Long id, String titulo, String descripcion, String image, String link) {
+    public Noticia(Long id, Long noticiaID, String titulo, String descripcion, String image, String link) {
         this.id = id;
+        this.noticiaID = noticiaID;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.image = image;
@@ -51,6 +54,14 @@ public class Noticia {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getNoticiaID() {
+        return noticiaID;
+    }
+
+    public void setNoticiaID(Long noticiaID) {
+        this.noticiaID = noticiaID;
     }
 
     public String getTitulo() {
@@ -85,26 +96,29 @@ public class Noticia {
         this.link = link;
     }
 
-    /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<RSS> getRSSList() {
-        if (rSSList == null) {
+    /** To-one relationship, resolved on first access. */
+    public RSS getRSS() {
+        Long __key = this.noticiaID;
+        if (rSS__resolvedKey == null || !rSS__resolvedKey.equals(__key)) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
             RSSDao targetDao = daoSession.getRSSDao();
-            List<RSS> rSSListNew = targetDao._queryNoticia_RSSList(id);
+            RSS rSSNew = targetDao.load(__key);
             synchronized (this) {
-                if(rSSList == null) {
-                    rSSList = rSSListNew;
-                }
+                rSS = rSSNew;
+            	rSS__resolvedKey = __key;
             }
         }
-        return rSSList;
+        return rSS;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
-    public synchronized void resetRSSList() {
-        rSSList = null;
+    public void setRSS(RSS rSS) {
+        synchronized (this) {
+            this.rSS = rSS;
+            noticiaID = rSS == null ? null : rSS.getId();
+            rSS__resolvedKey = noticiaID;
+        }
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */

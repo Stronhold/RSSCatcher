@@ -1,11 +1,16 @@
 package es.deusto.view;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -25,6 +30,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.RSS;
+import es.deusto.model.services.rss.RssService;
 import es.deusto.view.Fragments.NewsFragment;
 import es.deusto.view.Fragments.RSSAddFragment;
 import es.deusto.view.lateralmenu.NavDrawerItem;
@@ -114,7 +120,22 @@ public class MyActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+        startBackground();
 
+    }
+    private void startBackground(){
+        Log.i("REINICIAMOS SERVICIO", "AHORA");
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 30); // first time
+        long frequency= 10 * 1000; // in ms
+
+        Intent intent = new Intent(this, RssService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 1205, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
     }
 
     public void LoadItems() {

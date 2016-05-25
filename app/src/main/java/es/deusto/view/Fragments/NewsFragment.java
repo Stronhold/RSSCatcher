@@ -49,9 +49,8 @@ public class NewsFragment extends Fragment {
     public void setInfoForNews(int news) {
         try {
             RSS rss = Database.Instance(this.getActivity()).getsRSS().getRSS().get(news);
-            if (Database.Instance(this.getActivity()).getNews().getNews(rss).size() == 0) {
-                Database.Instance(this.getActivity()).getNews().insertNews(new Noticia(rss.getId(), "hola" + news, "guapo", "", ""));
-            }
+            Database.Instance(this.getActivity()).getNews().getAllNews();
+            rss.getNoticiaList();
             noticias = Database.Instance(this.getActivity()).getNews().getNews(rss);
             if (adapter != null)
                 adapter.notifyDataSetChanged();

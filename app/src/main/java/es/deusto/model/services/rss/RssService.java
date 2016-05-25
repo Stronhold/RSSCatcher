@@ -32,15 +32,15 @@ public class RssService extends Service implements INotifyResult{
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
     // timer handling
-    private List<Noticia> items;
     int count = 0;
+    boolean update = false;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
+    RSS rss;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Start");
@@ -52,14 +52,15 @@ public class RssService extends Service implements INotifyResult{
 
         for(RSS r:listaRss) {
             FeedTask myFeedTask = new FeedTask(this);
+            rss = r;
             try {
+                myFeedTask.setID(r.getId());
                 myFeedTask.execute(r.getUrl()).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            reloadDB(r.getId());
         }
 
         if(count >= 0){
@@ -113,24 +114,29 @@ public class RssService extends Service implements INotifyResult{
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            reloadDB(r.getId());
         }
     }
 
-    public void reloadDB(Long id) {
+    public void reloadDB(List<Noticia> items,Long id) {
         //Guardar en db
-        int size = items.size();
-        if(size > 3){
-            size = 3;
-        }
-        Database.Instance(this).getNews().deleteAllRSSForANew(id);
-        for(int i = 0; i < size; i++){
-            Database.Instance(this).getNews().insertNews(items.get(i));
+        if(items != null) {
+            int size = items.size();
+            if (size > 3) {
+                size = 3;
+            }
+            Database.Instance(this).getNews().deleteAllRSSForANew(id);
+            for (int i = 0; i < size; i++) {
+                Noticia n = items.get(i);
+                n.setId((long) i);
+                n.setNoticiaID(id);
+                n.setRSS(rss);
+                Database.Instance(this).getNews().insertNews(n);
+            }
         }
     }
 
     @Override
-    public void processFinish(List<Noticia> items) {
-        this.items = items;
+    public void processFinish(List<Noticia> items, long id) {
+        reloadDB(items, id);
     }
 }

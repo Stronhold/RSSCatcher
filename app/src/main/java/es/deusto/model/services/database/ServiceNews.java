@@ -18,7 +18,7 @@ public class ServiceNews {
     }
 
     public List<Noticia> getNews(RSS rss){
-        return this.noticias.queryBuilder().where(NoticiaDao.Properties.Id.eq(rss.getId())).list();
+        return this.noticias.queryBuilder().where(NoticiaDao.Properties.NoticiaID.eq(rss.getId())).list();
     }
 
     public void deleteAllRSS(){
@@ -32,7 +32,7 @@ public class ServiceNews {
     }
 
     public void deleteAllRSSForANew(Long id) {
-        List<Noticia> a = this.noticias.queryBuilder().where(NoticiaDao.Properties.Id.eq(id)).list();
+        List<Noticia> a = this.noticias.queryBuilder().where(NoticiaDao.Properties.NoticiaID.eq(id)).list();
         this.deleteListOfNews(a);
     }
 
@@ -44,5 +44,9 @@ public class ServiceNews {
 
     public void insertNews(Noticia noticia) {
         noticias.insert(noticia);
+    }
+
+    public void getAllNews() {
+        List<Noticia> algo = noticias.queryBuilder().list();
     }
 }

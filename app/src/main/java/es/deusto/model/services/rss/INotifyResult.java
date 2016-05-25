@@ -8,5 +8,5 @@ import es.deusto.model.services.database.dao.Noticia;
  * Created by Sergio on 16/05/2016.
  */
 public interface INotifyResult {
-    void processFinish(List<Noticia> items);
+    void processFinish(List<Noticia> items, long id);
 }

@@ -1,6 +1,5 @@
 package es.deusto.model.services.database.dao;
 
-import java.util.List;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -8,8 +7,6 @@ import android.database.sqlite.SQLiteStatement;
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
 import de.greenrobot.dao.internal.DaoConfig;
-import de.greenrobot.dao.query.Query;
-import de.greenrobot.dao.query.QueryBuilder;
 
 import es.deusto.model.services.database.dao.RSS;
 
@@ -30,9 +27,11 @@ public class RSSDao extends AbstractDao<RSS, Long> {
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property ImageUri = new Property(2, String.class, "imageUri", false, "IMAGE_URI");
         public final static Property Url = new Property(3, String.class, "url", false, "URL");
+        public final static Property RssID = new Property(4, Long.class, "rssID", false, "RSS_ID");
     };
 
-    private Query<RSS> noticia_RSSListQuery;
+    private DaoSession daoSession;
+
 
     public RSSDao(DaoConfig config) {
         super(config);
@@ -40,6 +39,7 @@ public class RSSDao extends AbstractDao<RSS, Long> {
     
     public RSSDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -49,7 +49,8 @@ public class RSSDao extends AbstractDao<RSS, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"NAME\" TEXT," + // 1: name
                 "\"IMAGE_URI\" TEXT," + // 2: imageUri
-                "\"URL\" TEXT);"); // 3: url
+                "\"URL\" TEXT," + // 3: url
+                "\"RSS_ID\" INTEGER);"); // 4: rssID
     }
 
     /** Drops the underlying database table. */
@@ -82,6 +83,17 @@ public class RSSDao extends AbstractDao<RSS, Long> {
         if (url != null) {
             stmt.bindString(4, url);
         }
+ 
+        Long rssID = entity.getRssID();
+        if (rssID != null) {
+            stmt.bindLong(5, rssID);
+        }
+    }
+
+    @Override
+    protected void attachEntity(RSS entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */
@@ -97,7 +109,8 @@ public class RSSDao extends AbstractDao<RSS, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // imageUri
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // url
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // url
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // rssID
         );
         return entity;
     }
@@ -109,6 +122,7 @@ public class RSSDao extends AbstractDao<RSS, Long> {
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setImageUri(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setRssID(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */
@@ -134,18 +148,4 @@ public class RSSDao extends AbstractDao<RSS, Long> {
         return true;
     }
     
-    /** Internal query to resolve the "rSSList" to-many relationship of Noticia. */
-    public List<RSS> _queryNoticia_RSSList(Long id) {
-        synchronized (this) {
-            if (noticia_RSSListQuery == null) {
-                QueryBuilder<RSS> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.Id.eq(null));
-                noticia_RSSListQuery = queryBuilder.build();
-            }
-        }
-        Query<RSS> query = noticia_RSSListQuery.forCurrentThread();
-        query.setParameter(0, id);
-        return query.list();
-    }
-
 }

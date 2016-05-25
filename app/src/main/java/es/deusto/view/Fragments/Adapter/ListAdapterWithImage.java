@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 import com.elpoeta.menulateralslide.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import es.deusto.model.services.database.dao.Noticia;
 
@@ -50,6 +51,10 @@ public class ListAdapterWithImage extends BaseAdapter {
         holder.desc = (TextView) convertView.findViewById(R.id.textView_Description);
         holder.name.setText(n.getTitulo());
         holder.desc.setText(n.getDescripcion());
+        if(n.getImage() != null){
+            ImageLoader.getInstance().displayImage(n.getImage(), holder.icon);
+
+        }
         return convertView;
     }
 
