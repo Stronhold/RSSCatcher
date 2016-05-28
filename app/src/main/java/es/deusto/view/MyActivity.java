@@ -231,10 +231,19 @@ public class MyActivity extends Activity {
             case 2:
             case 3:
                 fragment = new NewsFragment();
-                ((NewsFragment) fragment).setInfoForNews(position);
+                List<RSS> rsss = Database.Instance(this).getsRSS().getRSS();
+                if(position < rsss.size()) {
+                    RSS rss = rsss.get(position);
+                    ((NewsFragment) fragment).setInfoForNews(rss);
+                    setTitle(rss.getName());
+                }
+            else{
+                setTitle(R.string.app_name);
+            }
                 break;
             case 4:
                 fragment = new RSSAddFragment();
+                setTitle(R.string.add_rss);
             default:
                 break;
         }
@@ -247,7 +256,6 @@ public class MyActivity extends Activity {
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
-            setTitle("");
             mDrawerLayout.closeDrawer(mDrawerList);
             Log.e("asd", "asd");
         } else {

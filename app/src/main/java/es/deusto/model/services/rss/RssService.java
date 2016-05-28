@@ -34,13 +34,13 @@ public class RssService extends Service implements INotifyResult{
     // timer handling
     int count = 0;
     boolean update = false;
+    private int id;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-    RSS rss;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Start");
@@ -48,11 +48,10 @@ public class RssService extends Service implements INotifyResult{
         Database db = Database.Instance(this);
         List<RSS> listaRss = db.getsRSS().getRSS();
         // schedule task
-        List<Noticia> listaNoticias = new ArrayList<Noticia>();
-
+        Database.Instance(this).getNews().deleteAllNews();
+        id = 0;
         for(RSS r:listaRss) {
             FeedTask myFeedTask = new FeedTask(this);
-            rss = r;
             try {
                 myFeedTask.setID(r.getId());
                 myFeedTask.execute(r.getUrl()).get();
@@ -124,12 +123,11 @@ public class RssService extends Service implements INotifyResult{
             if (size > 3) {
                 size = 3;
             }
-            Database.Instance(this).getNews().deleteAllRSSForANew(id);
             for (int i = 0; i < size; i++) {
                 Noticia n = items.get(i);
-                n.setId((long) i);
                 n.setNoticiaID(id);
-                n.setRSS(rss);
+                n.setId((long) this.id);
+                this.id++;
                 Database.Instance(this).getNews().insertNews(n);
             }
         }

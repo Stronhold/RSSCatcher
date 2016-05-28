@@ -21,7 +21,7 @@ public class ServiceNews {
         return this.noticias.queryBuilder().where(NoticiaDao.Properties.NoticiaID.eq(rss.getId())).list();
     }
 
-    public void deleteAllRSS(){
+    public void deleteAllNews(){
         noticias.deleteAll();
     }
 

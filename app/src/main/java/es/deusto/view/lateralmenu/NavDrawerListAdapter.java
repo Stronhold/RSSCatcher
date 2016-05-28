@@ -2,6 +2,7 @@ package es.deusto.view.lateralmenu;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.elpoeta.menulateralslide.R;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.util.ArrayList;
 
@@ -55,7 +58,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
         if(drawerItem.getIcon() != null && drawerItem.getIcon() != "") {
             String uri = drawerItem.getIcon();
             String decodedUri = Uri.decode(uri);
-            ImageLoader.getInstance().displayImage("file:///" + decodedUri, imgIcon);
+			ImageLoader.getInstance().displayImage("file:///" + decodedUri, imgIcon);
         }
         else{
             String imageUri = "drawable://" + R.drawable.rss_add;
