@@ -1,6 +1,7 @@
 package es.deusto.view.Fragments;
 
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.elpoeta.menulateralslide.R;
 
@@ -59,9 +61,23 @@ public class NewsFragment extends Fragment {
                     if(adapter.data != null) {
                         if(adapter.data.size() > position) {
                             String url = adapter.data.get(position).getLink();
-                            Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setData(Uri.parse(url));
-                            //startActivity(i);
+                            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            i.setPackage("com.android.chrome");
+
+                            try {
+                                getActivity().startActivity(i);
+                            } catch (ActivityNotFoundException ex) {
+                                // Chrome browser presumably not installed so allow user to choose instead
+                                i.setPackage(null);
+                                try{
+                                startActivity(i);
+                                }catch (Exception e){
+                                    Toast.makeText(getActivity(), "Url malformed", Toast.LENGTH_LONG);
+                                }
+
+                            }
+                            //i.setData(Uri.parse(url));
                         }
                     }
                 }
