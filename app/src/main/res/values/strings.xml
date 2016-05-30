@@ -3,6 +3,7 @@
 
     <string name="app_name">Rss Catcher</string>
     <string name="action_settings">Configuración</string>
+    <string name="news">News</string>
 
     <string name="add_rss">Add rss</string>
 
