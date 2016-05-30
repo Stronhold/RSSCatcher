@@ -3,10 +3,13 @@ package es.deusto.view.Fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,12 +35,13 @@ import java.util.Date;
 
 import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.RSS;
+import es.deusto.model.services.rss.task.RSSExistTask;
 import es.deusto.view.MyActivity;
 
 /**
  * Created by user on 26/08/2014.
  */
-public class RSSAddFragment extends Fragment {
+public class RSSAddFragment extends Fragment implements INotifyInternet{
 
     private static final int SELECT_FILE = 0;
 
@@ -75,6 +79,7 @@ public class RSSAddFragment extends Fragment {
     public void onViewCreated(View rootView, Bundle savedInstanceState) {
         eTextName = (EditText) rootView.findViewById(R.id.tEditNameRss);
         eTextUrl = (EditText) rootView.findViewById(R.id.tEditUrl);
+        eTextUrl.setText("http://feeds.bbci.co.uk/news/rss.xml");
         bSave = (Button) rootView.findViewById(R.id.buttonSave);
         startEvents();
     }
@@ -83,25 +88,31 @@ public class RSSAddFragment extends Fragment {
         bSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RSS rss = new RSS();
-                rss.setImageUri(path);
-                rss.setName(eTextName.getText().toString());
-                rss.setUrl("http://feeds.bbci.co.uk/news/rss.xml");
-                //rss.setUrl(eTextUrl.getText().toString());
-                boolean added = Database.Instance(getActivity()).getsRSS().insertRSS(rss);
-                if (!added) {
-                    Toast.makeText(getActivity(), "There are already three RSS's added",
-                            Toast.LENGTH_LONG).show();
 
-                } else {
-                    Toast.makeText(getActivity(), "Added RSS",
-                            Toast.LENGTH_LONG).show();
-                    ((MyActivity) getActivity()).LoadItems();
-                    ((MyActivity) getActivity()).notifyAdapter();
+                boolean internet = checkInternet();
+                if(internet) {
+                    RSSExistTask e = new RSSExistTask(RSSAddFragment.this);
+                    e.execute(eTextUrl.getText().toString());
                 }
-                Log.d("Button", "click");
+                else{
+                    Toast.makeText(getActivity(), "There is no internet connection",
+                            Toast.LENGTH_LONG);
+                }
             }
         });
+    }
+
+    private boolean checkInternet() {
+        ConnectivityManager conMgr = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo i = conMgr.getActiveNetworkInfo();
+        if (i == null)
+            return false;
+        if (!i.isConnected())
+            return false;
+        if (!i.isAvailable())
+            return false;
+        return true;
     }
 
     @Override
@@ -189,5 +200,31 @@ public class RSSAddFragment extends Fragment {
         // Save a file: path for use with ACTION_VIEW intents
         path = "file:" + image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    public void connectivity(boolean exist) {
+        if(exist){
+            RSS rss = new RSS();
+            rss.setImageUri(path);
+            rss.setName(eTextName.getText().toString());
+            rss.setUrl(eTextUrl.getText().toString());
+            boolean added = Database.Instance(getActivity()).getsRSS().insertRSS(rss);
+            if (!added) {
+                Toast.makeText(getActivity(), "There are already three RSS's added",
+                        Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(getActivity(), "Added RSS",
+                        Toast.LENGTH_LONG).show();
+                ((MyActivity) getActivity()).LoadItems();
+                ((MyActivity) getActivity()).notifyAdapter();
+            }
+            Log.d("Button", "click");
+        }
+        else{
+            Toast.makeText(getActivity(), "The RSS does not exist",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }

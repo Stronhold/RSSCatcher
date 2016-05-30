@@ -30,6 +30,7 @@ public class NewsFragment extends Fragment {
     ListView listaNews;
     ListAdapterWithImage adapter;
     private List<Noticia> noticias;
+    private RSS rss;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,10 +72,15 @@ public class NewsFragment extends Fragment {
     public void setInfoForNews(RSS rss) {
         try {
             noticias = Database.Instance(this.getActivity()).getNews().getNews(rss);
+            this.rss = rss;
             if (adapter != null)
                 adapter.notifyDataSetChanged();
         } catch (Exception e) {
 
         }
+    }
+
+    public void reloadRSS(){
+        setInfoForNews(rss);
     }
 }

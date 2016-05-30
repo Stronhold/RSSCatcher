@@ -53,6 +53,7 @@ public class MyActivity extends Activity {
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
+    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,7 +225,7 @@ public class MyActivity extends Activity {
      */
     private void displayView(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = null;
+        fragment = null;
         switch (position) {
             case 0:
             case 1:
@@ -291,5 +292,11 @@ public class MyActivity extends Activity {
 
     public void notifyAdapter() {
         adapter.notifyDataSetChanged();
+    }
+
+    public void reloadNewsInFragment(){
+        if(fragment instanceof NewsFragment){
+            ((NewsFragment) fragment).reloadRSS();
+        }
     }
 }
