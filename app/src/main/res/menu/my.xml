@@ -2,15 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="es.deusto.view.MyActivity" >
-    <item
-        android:id="@+id/menu_item_share"
-        app:showAsAction="ifRoom"
-        android:title="Share"
-        android:actionProviderClass=
-            "android.widget.ShareActionProvider" />
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-
+    <item android:id="@+id/mnu_share" android:title="@string/share" android:icon="@drawable/ic_share_white_24dp"
+        android:showAsAction="always" android:actionProviderClass="android.widget.ShareActionProvider" />
+    <item android:id="@+id/mnu_settings" android:title="@string/permissions" android:showAsAction="always" android:icon="@drawable/ic_settings_white_24dp"/>
 </menu>

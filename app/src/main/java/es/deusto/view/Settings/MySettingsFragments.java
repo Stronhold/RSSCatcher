@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.util.Log;
 
 import com.elpoeta.menulateralslide.R;
@@ -40,11 +41,15 @@ public class MySettingsFragments extends PreferenceFragment implements SharedPre
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals("notification")) {
-            boolean b = sharedPreferences.getBoolean("notification", true);
+        if(key.equals("service")) {
+            boolean b = sharedPreferences.getBoolean("service", true);
             if (b) {
+                SwitchPreference sw = (SwitchPreference) findPreference("notification");
+                sw.setEnabled(true);
                 startBackground();
             } else {
+                SwitchPreference sw = (SwitchPreference) findPreference("notification");
+                sw.setEnabled(false);
                 finishBackground();
             }
         }

@@ -127,7 +127,7 @@ public class MyActivity extends Activity {
 
     }
     private void startBackground(){
-        Log.i("REINICIAMOS SERVICIO", "AHORA");
+        Log.i("REINICIAMOS SERVICIO", "AHORA ACTIVITY");
 
 
         Calendar calendar = Calendar.getInstance();
@@ -184,8 +184,9 @@ public class MyActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.my, menu);
-        MenuItem item = menu.findItem(R.id.menu_item_share);
+        MenuItem item = menu.findItem(R.id.mnu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        //mShareActionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
         setShareIntent(createShareIntent());
         return true;
     }
@@ -213,7 +214,7 @@ public class MyActivity extends Activity {
         }
         // Handle action bar actions click
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.mnu_settings:
                 Fragment fragment = new MySettings();
                 if (fragment != null) {
                     FragmentManager fragmentManager = getFragmentManager();

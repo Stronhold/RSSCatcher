@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/permissions">
-    <SwitchPreference
-        android:title="@string/notifications"
-        android:key="notification"
-        android:switchTextOn="@string/yes"
-        android:switchTextOff="@string/no"
-        android:defaultValue="false"/>
+        <SwitchPreference
+            android:title="@string/service"
+            android:key="service"
+            android:switchTextOn="@string/yes"
+            android:switchTextOff="@string/no"
+            android:defaultValue="false"/>
+        <SwitchPreference
+            android:title="@string/notifications"
+            android:key="notification"
+            android:switchTextOn="@string/yes"
+            android:switchTextOff="@string/no"
+            android:enabled="false"
+            android:defaultValue="false"/>
     </PreferenceCategory>
 </PreferenceScreen>
