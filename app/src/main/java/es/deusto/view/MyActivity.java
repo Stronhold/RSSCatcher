@@ -223,9 +223,16 @@ public class MyActivity extends Activity {
 
                     setTitle(R.string.title);
                     mDrawerLayout.closeDrawer(mDrawerList);
+                    mDrawerToggle.setDrawerIndicatorEnabled(false);
                 }
                 return true;
             default:
+                if(!mDrawerToggle.isDrawerIndicatorEnabled()){
+                    Intent i = getBaseContext().getPackageManager()
+                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                }
                 return super.onOptionsItemSelected(item);
         }
     }
