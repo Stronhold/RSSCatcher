@@ -53,6 +53,7 @@ public class RssService extends Service implements INotifyResult{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service", "Start");
+        Boolean newNews = false;
 
         Database db = Database.Instance(this);
         List<RSS> listaRss = db.getsRSS().getRSS();
@@ -64,6 +65,7 @@ public class RssService extends Service implements INotifyResult{
             try {
                 myFeedTask.setID(r.getId());
                 myFeedTask.execute(r.getUrl()).get();
+                newNews = true;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -73,7 +75,7 @@ public class RssService extends Service implements INotifyResult{
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         boolean not = sharedPref.getBoolean("notification",true);
-        if(not) {
+        if(not && newNews) {
             String sendMsg = "Tienes nuevas noticias";
             showNotification(getApplicationContext(), sendMsg);
         }

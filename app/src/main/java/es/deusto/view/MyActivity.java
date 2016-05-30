@@ -127,18 +127,6 @@ public class MyActivity extends Activity {
 
     }
     private void startBackground(){
-        Log.i("REINICIAMOS SERVICIO", "AHORA ACTIVITY");
-
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 30); // first time
-        long frequency= 10 * 1000; // in ms
-
-        Intent intent = new Intent(this, RssService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 1205, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
     }
 
     public void LoadItems() {
