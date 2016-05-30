@@ -2,14 +2,21 @@ package es.deusto.model.services.rss;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.elpoeta.menulateralslide.R;
 
@@ -21,6 +28,8 @@ import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.Noticia;
 import es.deusto.model.services.database.dao.RSS;
 import es.deusto.model.services.rss.task.FeedTask;
+import es.deusto.view.MyActivity;
+import es.deusto.view.Widget.WidgetProvider;
 
 /**
  * Created by Sergio on 16/05/2016.
@@ -32,9 +41,9 @@ public class RssService extends Service implements INotifyResult{
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
     // timer handling
-    int count = 0;
     boolean update = false;
     private int id;
+    SharedPreferences sharedPref;
 
     @Nullable
     @Override
@@ -62,8 +71,10 @@ public class RssService extends Service implements INotifyResult{
             }
         }
 
-        if(count >= 0){
-            String sendMsg = "Tienes " + count + " nuevas noticias";
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean not = sharedPref.getBoolean("notification",true);
+        if(not) {
+            String sendMsg = "Tienes nuevas noticias";
             showNotification(getApplicationContext(), sendMsg);
         }
         return super.onStartCommand(intent, flags, startId);
@@ -78,11 +89,15 @@ public class RssService extends Service implements INotifyResult{
     }
 
     private void showNotification(Context context, String message) {
+        Intent defineIntent = new Intent(this, MyActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, defineIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder nBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.abc_cab_background_bottom_holo_dark)
+                        .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(message)
-                        .setContentText(message);
+                        .setContentText(message)
+                        .setContentIntent(pendingIntent);
         Notification noti = nBuilder.build();
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -120,6 +135,7 @@ public class RssService extends Service implements INotifyResult{
         //Guardar en db
         if(items != null) {
             int size = items.size();
+            Noticia news = items.get(0);
             for (int i = 0; i < size; i++) {
                 Noticia n = items.get(i);
                 n.setNoticiaID(id);
@@ -127,6 +143,7 @@ public class RssService extends Service implements INotifyResult{
                 this.id++;
                 Database.Instance(this).getNews().insertNews(n);
             }
+            SendInfoToWidget(news);
         }
     }
 
@@ -134,4 +151,29 @@ public class RssService extends Service implements INotifyResult{
     public void processFinish(List<Noticia> items, long id) {
         reloadDB(items, id);
     }
+
+    public void SendInfoToWidget (Noticia n)
+    {
+        RemoteViews updateViews = new RemoteViews(this.getBaseContext().getPackageName(), R.layout.mywidget);
+        if(n != null) {
+            if(n.getImage() != null) {
+                Uri u = Uri.parse(n.getImage());
+                updateViews.setImageViewUri(R.id.imageWidget, u);
+            }
+            updateViews.setTextViewText(R.id.txtNombre, n.getTitulo());
+            // When user clicks on widget, launch to Wiktionary definition page
+
+            Intent defineIntent = new Intent(this, MyActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, defineIntent, 0);
+            updateViews.setOnClickPendingIntent(R.id.txtNombre, pendingIntent);
+            updateViews.setOnClickPendingIntent(R.id.imageWidget, pendingIntent);
+
+
+            ComponentName thisWidget = new ComponentName(this, WidgetProvider.class);
+            AppWidgetManager manager = AppWidgetManager.getInstance(this);
+            manager.updateAppWidget(thisWidget, updateViews);
+        }
+
+    }
+
 }

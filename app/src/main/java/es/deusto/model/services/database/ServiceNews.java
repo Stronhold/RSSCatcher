@@ -49,4 +49,9 @@ public class ServiceNews {
     public void getAllNews() {
         List<Noticia> algo = noticias.queryBuilder().list();
     }
+
+    public Noticia getNewsByID(long i) {
+        Noticia n = noticias.load(i);
+        return n;
+    }
 }
