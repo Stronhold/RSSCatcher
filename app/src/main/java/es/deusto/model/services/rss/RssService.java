@@ -63,7 +63,7 @@ public class RssService extends Service implements INotifyResult{
         }
 
         if(count >= 0){
-            String sendMsg = "Tienes " + count + " nuevas noticias";
+            String sendMsg = "There are recent news!";
             showNotification(getApplicationContext(), sendMsg);
         }
         return super.onStartCommand(intent, flags, startId);
@@ -102,8 +102,6 @@ public class RssService extends Service implements INotifyResult{
         Database db = Database.Instance(this);
         List<RSS> listaRss = db.getsRSS().getRSS();
         // schedule task
-        List<Noticia> listaNoticias = new ArrayList<Noticia>();
-
         for(RSS r:listaRss) {
             FeedTask myFeedTask = new FeedTask(this);
             try {
