@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import es.deusto.model.services.Widget.WidgetProvider;
 import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.Noticia;
 import es.deusto.model.services.database.dao.RSS;
 import es.deusto.model.services.rss.task.FeedTask;
 import es.deusto.view.MyActivity;
-import es.deusto.view.Widget.WidgetProvider;
 
 /**
  * Created by Sergio on 16/05/2016.
