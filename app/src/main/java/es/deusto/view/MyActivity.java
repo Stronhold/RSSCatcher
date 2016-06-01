@@ -11,9 +11,11 @@ import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -29,6 +31,7 @@ import com.elpoeta.menulateralslide.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import es.deusto.model.services.Constants;
 import es.deusto.model.services.database.Database;
 import es.deusto.model.services.database.dao.RSS;
 import es.deusto.model.services.rss.RssService;
@@ -113,20 +116,24 @@ public class MyActivity extends Activity {
             // on first time display view for first nav item
             displayView(0);
         }
-
-        //new FeedTask().execute("http://feeds.bbci.co.uk/news/rss.xml");
-  /*      try {
-            List<RssItem> RssItems = rssReader.getItems();
-            for(RssItem r: RssItems){
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-        startBackground();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if(prefs.getBoolean(Constants.SERVICE, false)){
+            startService();
+        }
 
     }
-    private void startBackground(){
+
+    private void startService(){
+        Log.i("INIT SERVICIO", "AHORA");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 30); // first time
+        long frequency= 30 * 1000; // in ms
+
+        Intent intent = new Intent(this, RssService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 1205, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
     }
 
     public void LoadItems() {

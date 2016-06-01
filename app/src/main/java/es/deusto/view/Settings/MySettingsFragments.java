@@ -17,6 +17,7 @@ import com.elpoeta.menulateralslide.R;
 
 import java.util.Calendar;
 
+import es.deusto.model.services.Constants;
 import es.deusto.model.services.rss.RssService;
 
 /**
@@ -37,18 +38,27 @@ public class MySettingsFragments extends PreferenceFragment implements SharedPre
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         PreferenceManager.getDefaultSharedPreferences(activity).registerOnSharedPreferenceChangeListener(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        boolean isService = prefs.getBoolean(Constants.SERVICE, false);
+        SwitchPreference sw = (SwitchPreference) findPreference(Constants.NOTIFICATION);
+        if(isService){
+            sw.setEnabled(true);
+        }
+        else{
+            sw.setEnabled(false);
+        }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals("service")) {
-            boolean b = sharedPreferences.getBoolean("service", true);
+        if(key.equals(Constants.SERVICE)) {
+            boolean b = sharedPreferences.getBoolean(Constants.SERVICE, false);
             if (b) {
-                SwitchPreference sw = (SwitchPreference) findPreference("notification");
+                SwitchPreference sw = (SwitchPreference) findPreference(Constants.NOTIFICATION);
                 sw.setEnabled(true);
                 startBackground();
             } else {
-                SwitchPreference sw = (SwitchPreference) findPreference("notification");
+                SwitchPreference sw = (SwitchPreference) findPreference(Constants.NOTIFICATION);
                 sw.setEnabled(false);
                 finishBackground();
             }
@@ -57,8 +67,6 @@ public class MySettingsFragments extends PreferenceFragment implements SharedPre
 
     private void startBackground(){
         Log.i("REINICIAMOS SERVICIO", "AHORA");
-
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.SECOND, 30); // first time

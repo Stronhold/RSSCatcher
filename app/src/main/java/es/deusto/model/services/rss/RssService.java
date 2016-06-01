@@ -9,6 +9,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -58,28 +60,43 @@ public class RssService extends Service implements INotifyResult{
         Database db = Database.Instance(this);
         List<RSS> listaRss = db.getsRSS().getRSS();
         // schedule task
-        Database.Instance(this).getNews().deleteAllNews();
         id = 0;
-        for(RSS r:listaRss) {
-            FeedTask myFeedTask = new FeedTask(this);
-            try {
-                myFeedTask.setID(r.getId());
-                myFeedTask.execute(r.getUrl()).get();
-                newNews = true;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+        if(checkInternet()) {
+            Database.Instance(this).getNews().deleteAllNews();
+            for (RSS r : listaRss) {
+                FeedTask myFeedTask = new FeedTask(this);
+                try {
+                    myFeedTask.setID(r.getId());
+                    myFeedTask.execute(r.getUrl()).get();
+                    newNews = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean notifications = sharedPref.getBoolean("notification", true);
+            if (notifications && newNews) {
+                String sendMsg = "Tienes nuevas noticias";
+                showNotification(getApplicationContext(), sendMsg);
             }
         }
-
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean not = sharedPref.getBoolean("notification",true);
-        if(not && newNews) {
-            String sendMsg = "Tienes nuevas noticias";
-            showNotification(getApplicationContext(), sendMsg);
-        }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private boolean checkInternet() {
+        ConnectivityManager conMgr = (ConnectivityManager) this.getApplication()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo i = conMgr.getActiveNetworkInfo();
+        if (i == null)
+            return false;
+        if (!i.isConnected())
+            return false;
+        if (!i.isAvailable())
+            return false;
+        return true;
     }
 
     @Override
